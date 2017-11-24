@@ -15,7 +15,6 @@ except NameError:
     str_types = (bytes, str)
 
 
-
 def get_measurement(model, attr):
     """Returns the value of a given measurement attribute for a given model.
 
@@ -32,7 +31,7 @@ def get_measurement(model, attr):
         # call it directly, otherwise we also pass the model as
         # argument to the function.
         if hasattr(model, attr.__name__) and \
-           getattr(model, attr.__name__) == attr:
+                        getattr(model, attr.__name__) == attr:
             return attr()
         else:
             return attr(model)
@@ -42,8 +41,8 @@ def get_measurement(model, attr):
             m = m()
         return m
 
-def paramsweep(model, repetitions, param_space, measure_attrs, max_iter=0,
-               csv_base_filename=None, measure_interval=1):
+
+def param_sweep(model, repetitions, param_space, measure_attrs, max_iter=0, csv_base_filename=None, measure_interval=1):
     """Performs a parameter sweep over Model instance `model', setting the
     parameters defined in the dictionary `param_space', each combination
     `repetitions' times, and outputs all measurements as defined by
@@ -93,7 +92,7 @@ def paramsweep(model, repetitions, param_space, measure_attrs, max_iter=0,
         for pn, pv in zip(param_names, vals):
             if pn not in model.params:
                 raise ValueError(("param '%s' not a parameter of model (known "
-                        "params: %s)") % (pn, ', '.join(model.params)))
+                                  "params: %s)") % (pn, ', '.join(model.params)))
             setattr(model, pn, pv)
 
         # Perform simulations requested amount of times with current params.
@@ -128,5 +127,3 @@ def paramsweep(model, repetitions, param_space, measure_attrs, max_iter=0,
                     writer.writerow(list(params) + [rep, None] + n)
 
     return measurements
-
-
