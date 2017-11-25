@@ -269,6 +269,7 @@ class GUI:
             plt.scatter(points[0], points[1], c=self.get_point_color(points[2]), s=500, marker='s')
             plt.gray()
             plt.ion()
+            self.modelFigure.canvas.manager.window.resizable("false", "false")
             plt.show()
 
         if sys.platform == 'darwin':
