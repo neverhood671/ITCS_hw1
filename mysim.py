@@ -5,10 +5,10 @@ import scipy.misc as smp
 
 def k_base_to_decimal(val, base):
     res = 0
-    index = 0
+    index = len(val)
     for j in val:
+        index -= 1
         res += j * pow(base, index)
-        index += 1
     return res
 
 
@@ -38,7 +38,6 @@ class MySim(Model):
             self.current_raw.append(self.rule[rule_length - k_base_to_decimal(current_val, self.k) - 1])
             start += 1
             end += 1
-        print(self.current_raw)
 
     def draw(self):
         return self.current_raw
