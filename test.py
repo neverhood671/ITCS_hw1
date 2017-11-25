@@ -1,7 +1,7 @@
 from ITCS_hw1 import GUI
 from ITCS_hw1.mysim import MySim
 
-m = MySim(1, 2, 30, [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1])
+m = MySim(1, 2, 170, [1, 0, 0, 0, 0])
 gui = GUI(m, 'someting')
 gui.start()
 

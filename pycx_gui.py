@@ -236,6 +236,7 @@ class GUI:
         self.draw_model()
         if self.param_entries:
             self.buttonSaveParameters.configure(state=NORMAL)
+        self.currentStep += 1
 
     def reset_model(self):
         self.running = False
@@ -245,32 +246,49 @@ class GUI:
         self.set_status_str("Model has been reset")
         self.draw_model()
 
+    def get_point_color(self, data):
+        point_colors = []
+        for i in data:
+            point_colors.append([0, 0, 0, i / self.model.k])
+        return point_colors
+
     def draw_model(self):
+
         if self.modelFigure is None:
             self.modelFigure = plt.figure()
 
             ax = self.modelFigure.add_subplot(111)
             xax = ax.xaxis
             xax.tick_top()
-            x = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
-            t = np.empty(len(x))
-            t.fill(10)
-            ax.axis([0, len(x)+1, 0, 100])
-            ax.invert_yaxis()
-            color = 'black'
-            ax.plot(x, t, 's',  markerfacecolor=color, markeredgecolor=color, markeredgewidth=12)
-            plt.ion()
-            # plt.show() will cause the plot to be actually displayed
-            plt.show()
 
-        # Tell matplotlib to redraw too. The darwin-version works with more
-        # types of matplotlib backends, but seems to fail on some Linux
-        # machines. Hence we use the TkAgg specific method when available.
+            points = self.init_values()
+
+            ax.axis([0, len(points[0]) + 1, 0, 100])
+            ax.invert_yaxis()
+
+            plt.scatter(points[0], points[1], c=self.get_point_color(points[2]), s=500, marker='s')
+            plt.gray()
+            plt.ion()
+            plt.show()
 
         if sys.platform == 'darwin':
             self.modelFigure.canvas.manager.show()
         else:
+            points = self.init_values()
+            plt.scatter(points[0], points[1], c=self.get_point_color(points[2]), s=500, marker='s')
             self.modelFigure.canvas.manager.window.update()
+
+    def init_values(self):
+        data = self.model.draw()
+        x = []
+        point_value = 1
+        for _ in data:
+            x.append(point_value)
+            point_value += 1
+
+        t = np.empty(len(x))
+        t.fill(self.currentStep)
+        return [x, t, data]
 
     def start(self):
         if self.model.step.__doc__:

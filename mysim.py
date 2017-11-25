@@ -20,7 +20,6 @@ class MySim(Model):
         self.rule = self.build_rule_set(rule_name, base)
         self.initial_raw = initial_raw
         self.current_raw = initial_raw
-        self.new_raw = []
 
     def reset(self):
         pass
@@ -28,16 +27,18 @@ class MySim(Model):
     def step(self):
         start = 0
         end = start + 2 * self.r + 1
-        length = len(self.initial_raw)
+        length = len(self.current_raw)
         rule_length = len(self.rule)
         prev_state = self.current_raw
+        self.current_raw = []
         prev_state.insert(0, prev_state[-1])
         prev_state.append(prev_state[1])
         while start < length:
             current_val = prev_state[start:end:1]
-            self.new_raw.append(self.rule[rule_length - k_base_to_decimal(current_val, self.k) - 1])
+            self.current_raw.append(self.rule[rule_length - k_base_to_decimal(current_val, self.k) - 1])
             start += 1
             end += 1
+        print(self.current_raw)
 
     def draw(self):
         return self.current_raw
