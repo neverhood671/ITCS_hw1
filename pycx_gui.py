@@ -266,9 +266,11 @@ class GUI:
             ax.axis([0, len(points[0]) + 1, 0, 100])
             ax.invert_yaxis()
 
-            plt.scatter(points[0], points[1], c=self.get_point_color(points[2]), s=500, marker='s')
+            plt.scatter(points[0], points[1], c=self.get_point_color(points[2]), s=5, marker='s')
             plt.gray()
             plt.ion()
+            dpi = self.modelFigure.get_dpi()
+            self.modelFigure.set_size_inches(550.0 / float(dpi), 550.0 / float(dpi))
             self.modelFigure.canvas.manager.window.resizable("false", "false")
             plt.show()
 
@@ -276,7 +278,7 @@ class GUI:
             self.modelFigure.canvas.manager.show()
         else:
             points = self.init_values()
-            plt.scatter(points[0], points[1], c=self.get_point_color(points[2]), s=500, marker='s')
+            plt.scatter(points[0], points[1], c=self.get_point_color(points[2]), s=5, marker='s')
             self.modelFigure.canvas.manager.window.update()
 
     def init_values(self):
