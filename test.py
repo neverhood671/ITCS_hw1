@@ -1,13 +1,63 @@
 from ITCS_hw1 import GUI
 from ITCS_hw1.mysim import MySim
+import matplotlib.pyplot as plt
+import numpy as np
 
-m = MySim(1, 2, 150, [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                      ])
-gui = GUI(m, 'someting')
-gui.start()
+
+def draw_rules_cycle_len(len_values):
+    plt.rcdefaults()
+    objects = []
+    i = 0
+    while i < len(len_values):
+        objects.append(str(i))
+        i += 1
+    y_pos = np.arange(len(objects))
+
+    plt.bar(y_pos, len_values, align='center', alpha=0.5)
+    plt.ylabel('Usage')
+    plt.title('Rules Cycles Length')
+    plt.show()
+
+
+init_raw = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            ]
+# m = MySim(1, 2, 0, init_raw)
+# gui = GUI(m, 'someting')
+# gui.start()
+
+r = 0
+result_map = dict()
+cycle_len = []
+is_cycle_found = False
+while r < 256:
+    m = MySim(1, 2, r, init_raw)
+    k = 0
+    while k < 10e6:
+        list_hash = tuple(m.current_raw)
+        if list_hash not in result_map:
+            result_map[list_hash] = k
+        else:
+            cycle_len.append(k - result_map[list_hash])
+            is_cycle_found = True
+            break
+        k += 1
+        m.step()
+    result_map.clear()
+    if not is_cycle_found:
+        cycle_len.append(-1)
+    r += 1
+    is_cycle_found = False
+    print(str(int(r*100/256)) + '%')
+
+with open("result.txt", 'w') as file_handler:
+    for item in cycle_len:
+        file_handler.write("{}\n".format(item))
+
+draw_rules_cycle_len(cycle_len)
+
 
 # k = 3
 # r = 1

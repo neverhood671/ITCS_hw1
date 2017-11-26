@@ -44,9 +44,9 @@ class MySim(Model):
 
     def build_rule_set(self, rule_name, base):
         length = pow(self.k, 2 * self.r + 1)
-        if rule_name == 0:
-            return [0]
         digits = []
+        if rule_name == 0:
+            digits.append(0)
         while rule_name:
             digits.append(int(rule_name % base))
             rule_name //= base
