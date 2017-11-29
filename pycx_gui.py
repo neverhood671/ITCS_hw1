@@ -30,11 +30,7 @@
 # imported *after* this file. A clean way do to this is to import pyplot
 # locally in the draw function of your model only.
 
-import sys
-import matplotlib.pyplot as plt
-import matplotlib
-from numpy.ma import arange
-from tkinter import *
+
 from pylab import *
 
 if sys.platform == 'darwin':

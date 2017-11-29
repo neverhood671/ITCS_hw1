@@ -1,6 +1,5 @@
 from ITCS_hw1 import Model
 import numpy as np
-import scipy.misc as smp
 
 
 def k_base_to_decimal(val, base):
@@ -34,25 +33,20 @@ class MySim(Model):
         self.rule_mas = np.zeros(([self.k] * rule_mas_dimension), dtype=np.int)
         self.build_rule_mas(self.rule_mas, rule_mas_dimension, len(self.rule) - 1)
 
-
     def step(self):
         start = 0
         end = start + 2 * self.r + 1
         length = len(self.current_raw)
-        # rule_length = len(self.rule)
         prev_state = self.current_raw
         self.current_raw = []
         prev_state.insert(0, prev_state[-1])
         prev_state.append(prev_state[1])
         while start < length:
-            # current_val = prev_state[start:end:1]
-            # self.current_raw.append(self.rule[rule_length - k_base_to_decimal(current_val, self.k) - 1])
             sub_rule_mas = self.rule_mas[prev_state[start]]
             array_index = start + 1
             while array_index < end:
                 sub_rule_mas = sub_rule_mas[prev_state[array_index % length]]
                 array_index += 1
-
             self.current_raw.append(sub_rule_mas)
             start += 1
             end += 1

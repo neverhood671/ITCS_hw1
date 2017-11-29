@@ -1,4 +1,3 @@
-from ITCS_hw1 import GUI
 from ITCS_hw1.mysim import MySim
 import matplotlib.pyplot as plt
 import numpy as np
@@ -74,7 +73,7 @@ def run_repetition(repetition, base, neighbors_num, iteration_num):
     return cycles_len_arrays
 
 
-def get_average_max_and_min_cycle_len(cycles_len_arrays):
+def run_calculation(cycles_len_arrays):
     j = 0
     average_cycle_len = []
     max_cycle_len = []
@@ -104,30 +103,19 @@ def get_average_max_and_min_cycle_len(cycles_len_arrays):
         j += 1
 
     draw_error_bars(average_cycle_len, min_cycle_len, max_cycle_len)
+    write_results_to_file(average_cycle_len)
 
-    with open("avarege_cycle_ten.txt", 'w') as file_handler:
-        for item in average_cycle_len:
+
+def write_results_to_file(results):
+    with open(result_file_name, 'w') as file_handler:
+        for item in results:
             file_handler.write("{}\n".format(item))
 
 
-def run_gui(initial_raw, k, r, rule):
-    m = MySim(r, k, rule, initial_raw)
-    gui = GUI(m, 'Running Rule №' + str(rule))
-    gui.start()
+repetition = 3
+base = 2
+neighbors_num = 1
+iteration_num = 10e4
+result_file_name = "average_cycle_ten.txt"
 
-
-# repetition = 3
-# base = 2
-# neighbors_num = 1
-# iteration_num = 10e4
-# get_average_max_and_min_cycle_len(run_repetition(repetition, base, neighbors_num, iteration_num))
-
-
-init_raw = [
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-]
-
-run_gui(init_raw, 2, 1, 22)
+run_calculation(run_repetition(repetition, base, neighbors_num, iteration_num))
