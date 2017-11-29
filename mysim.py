@@ -23,6 +23,7 @@ class MySim(Model):
         rule_mas_dimension = 2 * neighbors_num + 1
         self.rule_mas = np.zeros(([base] * rule_mas_dimension), dtype=np.int)
         self.build_rule_mas(self.rule_mas, rule_mas_dimension, len(self.rule) - 1)
+        self.current_time = 0
 
     def reset(self):
         pass

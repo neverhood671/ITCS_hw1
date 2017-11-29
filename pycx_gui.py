@@ -110,6 +110,9 @@ class GUI:
         self.buttonReset.pack(side=TOP, padx=5, pady=5)
         self.show_help(self.buttonReset, "Resets the simulation")
 
+        self.rule_input = Text(self.frameSim, width=10, height=1)
+        self.rule_input.pack(side=TOP, padx=5, pady=5)
+
         for param in self.model.params:
             var_text = self.param_gui_names.get(param, param)
             can = Canvas(self.frameSim)
@@ -255,8 +258,10 @@ class GUI:
     def draw_model(self):
 
         if self.modelFigure is None:
-            self.modelFigure = plt.figure()
-
+            self.modelFigure = plt.figure(figsize=(8, 6))
+            self.modelFigure.suptitle('Running Rule №' + str(self.model.rule))
+            self.modelFigure.suptitle('T = ' + str(self.model.current_time), fontsize=20)
+            self.model.current_time += 1
             ax = self.modelFigure.add_subplot(111)
             xax = ax.xaxis
             xax.tick_top()
@@ -277,6 +282,9 @@ class GUI:
         if sys.platform == 'darwin':
             self.modelFigure.canvas.manager.show()
         else:
+            self.modelFigure.suptitle('Running Rule №' + str(self.model.rule))
+            self.modelFigure.suptitle('T = ' + str(self.model.current_time), fontsize=20)
+            self.model.current_time += 1
             points = self.init_values()
             plt.scatter(points[0], points[1], c=self.get_point_color(points[2]), s=5, marker='s')
             self.modelFigure.canvas.manager.window.update()
