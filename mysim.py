@@ -17,6 +17,7 @@ class MySim(Model):
         Model.__init__(self)
         self.k = base
         self.r = neighbors_num
+        self.rule_name = rule_name
         self.rule = self.build_rule_set(rule_name, base)
         self.initial_raw = initial_raw
         self.current_raw = initial_raw
@@ -26,13 +27,19 @@ class MySim(Model):
         self.current_time = 0
 
     def reset(self):
-        pass
+        self.current_raw = self.initial_raw
+        self.current_time = 0
+        self.rule = self.build_rule_set(self.rule_name, self.k)
+        rule_mas_dimension = 2 * self.r + 1
+        self.rule_mas = np.zeros(([self.k] * rule_mas_dimension), dtype=np.int)
+        self.build_rule_mas(self.rule_mas, rule_mas_dimension, len(self.rule) - 1)
+
 
     def step(self):
         start = 0
         end = start + 2 * self.r + 1
         length = len(self.current_raw)
-        rule_length = len(self.rule)
+        # rule_length = len(self.rule)
         prev_state = self.current_raw
         self.current_raw = []
         prev_state.insert(0, prev_state[-1])

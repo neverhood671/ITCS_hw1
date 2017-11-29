@@ -44,7 +44,7 @@ def run_repetition(repetition, base, neighbors_num, iteration_num):
     repetition_index = repetition
 
     while repetition_index:
-        init_raw = list(np.random.choice([0, 1], size=(25,)))
+        init_raw = list(np.random.choice([0, 1], size=(112,)))
         result_map = {}
         r = 0
         cycle_len = []
@@ -56,7 +56,7 @@ def run_repetition(repetition, base, neighbors_num, iteration_num):
             while k < iteration_num and (not is_cycle_found):
                 list_hash = get_hash(m.current_raw)
                 if list_hash not in result_map:
-                    # if k % 100 == 0:
+                    if k % 100 == 0:
                         result_map[list_hash] = k
                 else:
                     cycle_len.append(k - result_map[list_hash])
@@ -116,18 +116,18 @@ def run_gui(initial_raw, k, r, rule):
     gui.start()
 
 
-repetition = 3
-base = 2
-neighbors_num = 1
-iteration_num = 100
-get_average_max_and_min_cycle_len(run_repetition(repetition, base, neighbors_num, iteration_num))
+# repetition = 3
+# base = 2
+# neighbors_num = 1
+# iteration_num = 10e4
+# get_average_max_and_min_cycle_len(run_repetition(repetition, base, neighbors_num, iteration_num))
 
 
-# init_raw = [
-#     # 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-#     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-#     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-#     # 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-# ]
-#
-# run_gui(init_raw, 2, 1, 30)
+init_raw = [
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+]
+
+run_gui(init_raw, 2, 1, 22)

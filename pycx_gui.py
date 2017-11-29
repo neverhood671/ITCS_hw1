@@ -34,6 +34,7 @@ import sys
 import matplotlib.pyplot as plt
 import matplotlib
 from numpy.ma import arange
+from tkinter import *
 from pylab import *
 
 if sys.platform == 'darwin':
@@ -81,7 +82,7 @@ class GUI:
 
         self.rootWindow.wm_title(self.titleText)
         self.rootWindow.protocol('WM_DELETE_WINDOW', self.quit_gui)
-        self.rootWindow.geometry('550x700')
+        self.rootWindow.geometry('550x200')
         self.rootWindow.columnconfigure(0, weight=1)
         self.rootWindow.rowconfigure(0, weight=1)
 
@@ -101,17 +102,26 @@ class GUI:
 
         self.show_help(self.buttonRun,
                        "Runs the simulation (or pauses the running simulation)")
-        self.buttonStep = Button(self.frameSim, width=30, height=2,
-                                 text="Step Once", command=self.step_once)
-        self.buttonStep.pack(side=TOP, padx=5, pady=5)
-        self.show_help(self.buttonStep, "Steps the simulation only once")
+        # self.buttonStep = Button(self.frameSim, width=30, height=2,
+        #                          text="Step Once", command=self.step_once)
+        # self.buttonStep.pack(side=TOP, padx=5, pady=5)
+        # self.show_help(self.buttonStep, "Steps the simulation only once")
         self.buttonReset = Button(self.frameSim, width=30, height=2,
                                   text="Reset", command=self.reset_model)
         self.buttonReset.pack(side=TOP, padx=5, pady=5)
         self.show_help(self.buttonReset, "Resets the simulation")
 
-        self.rule_input = Text(self.frameSim, width=10, height=1)
-        self.rule_input.pack(side=TOP, padx=5, pady=5)
+        c = Canvas(self.frameSim)
+        c.pack(side='top')
+
+        self.rule_label = Label(c, width=25, height=1,
+                                text="Rule: ", justify=LEFT,
+                                anchor=W)
+        self.rule_label.pack(side='left')
+
+        self.rule_input = Text(c, width=10, height=1)
+        self.rule_input.pack()
+        self.rule_input.insert(1.0, str(self.model.rule_name))
 
         for param in self.model.params:
             var_text = self.param_gui_names.get(param, param)
@@ -140,33 +150,33 @@ class GUI:
             self.show_help(self.buttonSaveParametersAndReset, "Saves the given parameter values and resets the model")
             self.buttonSaveParametersAndReset.pack(side='top', padx=5, pady=5)
 
-        can = Canvas(self.frameSim)
-        lab = Label(can, width=25, height=1, text="Step size ", justify=LEFT,
-                    anchor=W, takefocus=0)
-        lab.pack(side='left')
-        self.stepScale = Scale(can, from_=1, to=500, resolution=1,
-                               command=self.change_step_size, orient=HORIZONTAL,
-                               width=25, length=150)
-        self.stepScale.set(self.stepSize)
-        self.show_help(self.stepScale, "Skips model redraw during every [n] simulation steps\n" +
-                       " Results in a faster model run.")
-        self.stepScale.pack(side='left')
-        can.pack(side='top')
-
-        can = Canvas(self.frameSim)
-        lab = Label(can, width=25, height=1,
-                    text="Step visualization delay in ms ", justify=LEFT,
-                    anchor=W, takefocus=0)
-        lab.pack(side='left')
-        self.stepDelay = Scale(can, from_=0, to=max(2000, self.timeInterval),
-                               resolution=10, command=self.change_step_delay,
-                               orient=HORIZONTAL, width=25, length=150)
-        self.stepDelay.set(self.timeInterval)
-        self.show_help(self.stepDelay, "The visualization of each step is " +
-                       "delays by the given number of " +
-                       "milliseconds.")
-        self.stepDelay.pack(side='left')
-        can.pack(side='top')
+            # can = Canvas(self.frameSim)
+            # lab = Label(can, width=25, height=1, text="Step size ", justify=LEFT,
+            #             anchor=W, takefocus=0)
+            # lab.pack(side='left')
+            # self.stepScale = Scale(can, from_=1, to=500, resolution=1,
+            #                        command=self.change_step_size, orient=HORIZONTAL,
+            #                        width=25, length=150)
+            # self.stepScale.set(self.stepSize)
+            # self.show_help(self.stepScale, "Skips model redraw during every [n] simulation steps\n" +
+            #                " Results in a faster model run.")
+            # self.stepScale.pack(side='left')
+            # can.pack(side='top')
+            #
+            # can = Canvas(self.frameSim)
+            # lab = Label(can, width=25, height=1,
+            #             text="Step visualization delay in ms ", justify=LEFT,
+            #             anchor=W, takefocus=0)
+            # lab.pack(side='left')
+            # self.stepDelay = Scale(can, from_=0, to=max(2000, self.timeInterval),
+            #                        resolution=10, command=self.change_step_delay,
+            #                        orient=HORIZONTAL, width=25, length=150)
+            # self.stepDelay.set(self.timeInterval)
+            # self.show_help(self.stepDelay, "The visualization of each step is " +
+            #                "delays by the given number of " +
+            #                "milliseconds.")
+            # self.stepDelay.pack(side='left')
+            # can.pack(side='top')
 
     def set_status_str(self, new_status):
         self.statusStr = new_status
@@ -202,7 +212,7 @@ class GUI:
             self.running = True
             self.rootWindow.after(self.timeInterval, self.step_model)
             self.runPauseString.set("Pause")
-            self.buttonStep.configure(state=DISABLED)
+            # self.buttonStep.configure(state=DISABLED)
             if self.param_entries:
                 self.buttonSaveParameters.configure(state=NORMAL)
                 self.buttonSaveParametersAndReset.configure(state=DISABLED)
@@ -212,7 +222,7 @@ class GUI:
     def stop_running(self):
         self.running = False
         self.runPauseString.set("Continue Run")
-        self.buttonStep.configure(state=NORMAL)
+        # self.buttonStep.configure(state=NORMAL)
         self.draw_model()
         if self.param_entries:
             self.buttonSaveParameters.configure(state=NORMAL)
@@ -241,12 +251,24 @@ class GUI:
             self.buttonSaveParameters.configure(state=NORMAL)
         self.currentStep += 1
 
+    def init_axes(self):
+        ax = self.modelFigure.add_subplot(111)
+        xax = ax.xaxis
+        xax.tick_top()
+        points = self.init_values()
+        ax.axis([0, len(points[0]) + 1, 0, 100])
+        ax.invert_yaxis()
+
     def reset_model(self):
         self.running = False
         self.runPauseString.set("Run")
+        self.model.rule_name = int(self.rule_input.get("1.0", "end-1c"))
         self.model.reset()
+        plt.clf()
+        self.init_axes()
         self.currentStep = 0
         self.set_status_str("Model has been reset")
+
         self.draw_model()
 
     def get_point_color(self, data):
@@ -256,21 +278,16 @@ class GUI:
         return point_colors
 
     def draw_model(self):
-
         if self.modelFigure is None:
-            self.modelFigure = plt.figure(figsize=(8, 6))
+            self.modelFigure = plt.figure()
             self.modelFigure.suptitle('Running Rule №' + str(self.model.rule))
             self.modelFigure.suptitle('T = ' + str(self.model.current_time), fontsize=20)
-            self.model.current_time += 1
             ax = self.modelFigure.add_subplot(111)
             xax = ax.xaxis
             xax.tick_top()
-
             points = self.init_values()
-
             ax.axis([0, len(points[0]) + 1, 0, 100])
             ax.invert_yaxis()
-
             plt.scatter(points[0], points[1], c=self.get_point_color(points[2]), s=5, marker='s')
             plt.gray()
             plt.ion()
@@ -278,16 +295,20 @@ class GUI:
             self.modelFigure.set_size_inches(550.0 / float(dpi), 550.0 / float(dpi))
             self.modelFigure.canvas.manager.window.resizable("false", "false")
             plt.show()
-
+            self.model.current_time += 1
         if sys.platform == 'darwin':
             self.modelFigure.canvas.manager.show()
         else:
             self.modelFigure.suptitle('Running Rule №' + str(self.model.rule))
             self.modelFigure.suptitle('T = ' + str(self.model.current_time), fontsize=20)
-            self.model.current_time += 1
             points = self.init_values()
             plt.scatter(points[0], points[1], c=self.get_point_color(points[2]), s=5, marker='s')
-            self.modelFigure.canvas.manager.window.update()
+            try:
+                self.modelFigure.canvas.manager.window.update()
+            except AttributeError:
+                self.quit_gui()
+
+            self.model.current_time += 1
 
     def init_values(self):
         data = self.model.draw()
@@ -296,7 +317,6 @@ class GUI:
         for _ in data:
             x.append(point_value)
             point_value += 1
-
         t = np.empty(len(x))
         t.fill(self.currentStep)
         return [x, t, data]
@@ -304,7 +324,6 @@ class GUI:
     def start(self):
         if self.model.step.__doc__:
             self.show_help(self.buttonStep, self.model.step.__doc__.strip())
-
         self.model.reset()
         self.draw_model()
         self.rootWindow.mainloop()
